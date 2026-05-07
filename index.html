@@ -1,0 +1,461 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>医院信息系统大数据平台</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;800&family=Orbitron:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/echarts@5.5.0/dist/echarts.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="bg-layer">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+        <div class="glow-orb orb-3"></div>
+        <div class="grid-overlay"></div>
+    </div>
+
+    <div class="app-container">
+        <!-- 顶部 Header -->
+        <header class="top-header glass-panel">
+            <div class="logo">
+                <i class="fa-solid fa-server"></i>
+                <div class="title-group">
+                    <h1>医院信息系统大数据平台</h1>
+                    <span>DATA INTEGRATION & GOVERNANCE</span>
+                </div>
+            </div>
+            <div class="header-right">
+                <div class="sys-time font-orbitron" id="sys-clock">00:00:00</div>
+                <div class="hospital-status">
+                    <span class="status-dot blink"></span> 数据总线高速运行
+                </div>
+            </div>
+        </header>
+
+        <!-- 核心统计指标区 (KPI Counters) -->
+        <section class="kpi-section">
+            <div class="kpi-card glass-panel" data-kpi="systems">
+                <div class="kpi-icon"><i class="fa-solid fa-network-wired"></i></div>
+                <div class="kpi-info">
+                    <p>异构系统接入数量</p>
+                    <h2 class="counter font-orbitron" data-target="24" data-suffix="">0</h2>
+                </div>
+            </div>
+            <div class="kpi-card glass-panel" data-kpi="storage">
+                <div class="kpi-icon text-green"><i class="fa-solid fa-database"></i></div>
+                <div class="kpi-info">
+                    <p>累计汇聚数据总量 (TB)</p>
+                    <h2 class="counter font-orbitron text-green" data-target="458" data-suffix="TB">0</h2>
+                </div>
+            </div>
+            <div class="kpi-card glass-panel" data-kpi="latency">
+                <div class="kpi-icon text-cyan"><i class="fa-solid fa-bolt"></i></div>
+                <div class="kpi-info">
+                    <p>平均数据接入延迟 (秒)</p>
+                    <h2 class="font-orbitron text-cyan glow-text" id="val-latency">2.1s</h2>
+                </div>
+            </div>
+            <div class="kpi-card glass-panel" data-kpi="security">
+                <div class="kpi-icon text-orange"><i class="fa-solid fa-shield-halved"></i></div>
+                <div class="kpi-info">
+                    <p>安全合规脱敏/拦截次数</p>
+                    <h2 class="counter font-orbitron text-orange" data-target="84291" data-suffix="">0</h2>
+                </div>
+            </div>
+        </section>
+
+        <!-- 主体内容区 -->
+        <section class="main-content">
+            <!-- 左侧：异构医疗系统接入拓扑 -->
+            <div class="left-panel" style="position: relative;">
+                <div class="glass-panel full-height" style="position: relative;">
+                    <div class="panel-header">
+                        <h3><i class="fa-solid fa-project-diagram"></i> 多源异构医疗系统接入拓扑</h3>
+                        <span class="badge blue">实时 CDC 同步中</span>
+                    </div>
+                    <div class="chart-box" id="topologyChart" style="height: calc(100% - 40px);"></div>
+                </div>
+            </div>
+
+            <!-- 右侧：数据治理与采集模式 -->
+            <div class="right-panel">
+                <!-- 上：数据采集模式实时带宽 -->
+                <div class="glass-panel">
+                    <div class="panel-header">
+                        <h3><i class="fa-solid fa-wave-square"></i> 数据汇总分析模块</h3>
+                    </div>
+                    <div class="chart-box" id="ingestChart"></div>
+                </div>
+
+                <div class="right-bottom-grid">
+                    <!-- 左下：数据类型占比 -->
+                    <div class="glass-panel">
+                        <div class="panel-header">
+                            <h3><i class="fa-solid fa-chart-pie"></i> 统一采集数据类型画像</h3>
+                        </div>
+                        <div class="chart-box small" id="dataTypeChart"></div>
+                    </div>
+                    <!-- 右下：数据治理与安全合规日志 -->
+                    <div class="glass-panel">
+                        <div class="panel-header">
+                            <h3><i class="fa-solid fa-list-check"></i> 数据标准治理与合规日志</h3>
+                        </div>
+                        <div class="gov-log-container">
+                            <div class="log-stream" id="govLogStream"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    </div>
+
+    <!-- 底部功能导航 Dock 栏 -->
+    <nav class="app-dock">
+        <div class="dock-item active" data-target="home">
+            <i class="fa-solid fa-satellite-dish"></i>
+            <span>集成引擎</span>
+        </div>
+        <div class="dock-item" data-target="gov">
+            <i class="fa-solid fa-list-check"></i>
+            <span>标准治理</span>
+        </div>
+        <div class="dock-item" data-target="sec">
+            <i class="fa-solid fa-shield-halved"></i>
+            <span>合规审计</span>
+        </div>
+        <div class="dock-item" data-target="bi">
+            <i class="fa-solid fa-chart-pie"></i>
+            <span>智能分析</span>
+        </div>
+    </nav>
+
+    <!-- 1. 数据标准治理中心 -->
+    <div id="module-gov" class="sys-module-modal hidden">
+        <div class="module-content">
+            <div class="panel-header" style="padding: 20px 28px; flex-shrink:0;">
+                <h3><i class="fa-solid fa-list-check"></i> 数据标准治理中心 <span style="font-size:12px;color:var(--text-sub);font-weight:normal;">Data Governance Center</span></h3>
+                <button class="close-module-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <!-- 统计卡片行 -->
+            <div class="detail-kpi-row" style="padding: 0 28px; flex-shrink:0;">
+                <div class="detail-stat-card green-accent"><p>全院数据质量健康分</p><h3 style="color:var(--green-glow)">98.4</h3><span>↑ 较上周 +0.3分</span></div>
+                <div class="detail-stat-card"><p>EMPI主索引患者数</p><h3>142.8万</h3><span>融合率 92.4%</span></div>
+                <div class="detail-stat-card orange-accent"><p>今日清洗脏数据</p><h3>14,293</h3><span>较昨日 ↓12%</span></div>
+                <div class="detail-stat-card cyan-accent"><p>数据标准覆盖率</p><h3>87.6%</h3><span>待补录字段 1,248个</span></div>
+            </div>
+            <!-- 两列布局：表格 + 规则 -->
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:16px 28px 0;flex-shrink:0;">
+                <div>
+                    <div class="detail-section-title"><i class="fa-solid fa-table-list"></i> 主数据字典标准覆盖状态</div>
+                    <table class="detail-pro-table">
+                        <thead><tr><th>数据域</th><th>字段总数</th><th>已标准化</th><th>覆盖率</th><th>状态</th></tr></thead>
+                        <tbody>
+                            <tr><td>患者基本信息</td><td>48</td><td>48</td><td>100%</td><td><span class="status-badge normal"><span class="dot"></span>完整</span></td></tr>
+                            <tr><td>诊断编码 ICD-10</td><td>3,420</td><td>3,380</td><td>98.8%</td><td><span class="status-badge normal"><span class="dot"></span>完整</span></td></tr>
+                            <tr><td>手术操作编码</td><td>6,840</td><td>6,200</td><td>90.6%</td><td><span class="status-badge warning"><span class="dot"></span>待补录</span></td></tr>
+                            <tr><td>检验项目编码</td><td>1,280</td><td>1,140</td><td>89.1%</td><td><span class="status-badge warning"><span class="dot"></span>待补录</span></td></tr>
+                            <tr><td>药品字典 (CFDA)</td><td>12,500</td><td>12,480</td><td>99.8%</td><td><span class="status-badge normal"><span class="dot"></span>完整</span></td></tr>
+                            <tr><td>耗材通用编码</td><td>8,200</td><td>6,890</td><td>84.0%</td><td><span class="status-badge error"><span class="dot"></span>缺口较大</span></td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <div class="detail-section-title"><i class="fa-solid fa-wand-magic-sparkles"></i> 数据清洗规则执行统计 (今日)</div>
+                    <table class="detail-pro-table">
+                        <thead><tr><th>规则名称</th><th>触发次数</th><th>修复</th><th>丢弃</th><th>来源系统</th></tr></thead>
+                        <tbody>
+                            <tr><td>空值必填项补全</td><td>5,821</td><td>5,821</td><td>0</td><td>HIS/EMR</td></tr>
+                            <tr><td>日期格式标准化</td><td>3,204</td><td>3,200</td><td>4</td><td>LIS/手麻</td></tr>
+                            <tr><td>身高体重异常值过滤</td><td>428</td><td>0</td><td>428</td><td>护理系统</td></tr>
+                            <tr><td>ICD编码映射转换</td><td>2,910</td><td>2,890</td><td>20</td><td>HIS</td></tr>
+                            <tr><td>重复记录去重合并</td><td>1,640</td><td>1,580</td><td>60</td><td>EMPI</td></tr>
+                            <tr><td>科室代码标准映射</td><td>892</td><td>892</td><td>0</td><td>全院</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <!-- 图表区 -->
+            <div style="flex:1;min-height:0;border-top:1px solid rgba(0,0,0,0.06);margin:16px 28px 0;padding:16px 0 20px;display:flex;flex-direction:column;">
+                <div class="detail-section-title"><i class="fa-solid fa-chart-line"></i> 近7日各异构系统数据接入量趋势</div>
+                <div id="govChart" style="width:100%;flex:1;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 2. 安全合规审计网 -->
+    <div id="module-sec" class="sys-module-modal hidden">
+        <div class="module-content">
+            <div class="panel-header" style="padding: 20px 28px; flex-shrink:0;">
+                <h3><i class="fa-solid fa-shield-halved"></i> 安全合规审计网 <span style="font-size:12px;color:var(--text-sub);font-weight:normal;">Security Audit</span></h3>
+                <button class="close-module-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="detail-kpi-row" style="padding: 0 28px; flex-shrink:0;">
+                <div class="detail-stat-card orange-accent"><p>今日拦截次数</p><h3 style="color:var(--orange)">248</h3><span>高危 12 / 中危 86</span></div>
+                <div class="detail-stat-card red-accent"><p>熔断IP数</p><h3 style="color:var(--red)">3</h3><span>已通报安全小组</span></div>
+                <div class="detail-stat-card"><p>脱敏字段数</p><h3>94,271</h3><span>成功率 99.97%</span></div>
+                <div class="detail-stat-card green-accent"><p>等保三级通过率</p><h3 style="color:var(--green-glow)">98.4%</h3><span>最近评测 2024-11</span></div>
+            </div>
+            <div style="display:grid;grid-template-columns:1fr 1fr;gap:20px;padding:16px 28px 0;flex-shrink:0;">
+                <div>
+                    <div class="detail-section-title"><i class="fa-solid fa-triangle-exclamation text-red"></i> 今日高危拦截事件</div>
+                    <table class="detail-pro-table">
+                        <thead><tr><th>时间</th><th>来源IP</th><th>风险类型</th><th>敏感级别</th><th>动作</th></tr></thead>
+                        <tbody>
+                            <tr><td class="mono">09:12:33</td><td>192.168.12.45</td><td class="text-red">越权获取明文手机号</td><td><span class="status-badge error"><span class="dot"></span>S1</span></td><td>熔断IP</td></tr>
+                            <tr><td class="mono">10:34:07</td><td>10.1.5.88</td><td class="text-red">SQL注入探测</td><td><span class="status-badge error"><span class="dot"></span>S1</span></td><td>过滤记录</td></tr>
+                            <tr><td class="mono">11:02:19</td><td>10.2.1.33</td><td class="text-orange">跨区域批量拉取</td><td><span class="status-badge warning"><span class="dot"></span>S2</span></td><td>限速告警</td></tr>
+                            <tr><td class="mono">11:45:52</td><td>172.16.8.101</td><td class="text-red">未授权身份证查询</td><td><span class="status-badge error"><span class="dot"></span>S1</span></td><td>阻断脱敏</td></tr>
+                            <tr><td class="mono">14:18:06</td><td>192.168.30.5</td><td class="text-orange">无授权财务查询</td><td><span class="status-badge warning"><span class="dot"></span>S2</span></td><td>阻断记录</td></tr>
+                            <tr><td class="mono">15:33:41</td><td>10.0.0.254</td><td class="text-red">大批量用户导出</td><td><span class="status-badge error"><span class="dot"></span>S1</span></td><td>阻断告警</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+                <div>
+                    <div class="detail-section-title"><i class="fa-solid fa-masks-theater"></i> 脱敏规则执行统计</div>
+                    <table class="detail-pro-table">
+                        <thead><tr><th>字段类型</th><th>规则</th><th>今日执行</th><th>覆盖系统</th></tr></thead>
+                        <tbody>
+                            <tr><td>患者手机号</td><td class="mono">PHONE_MASK</td><td>48,320</td><td>HIS/EMR/LIS</td></tr>
+                            <tr><td>居民身份证</td><td class="mono">IDCARD_MASK</td><td>21,850</td><td>HIS/医保</td></tr>
+                            <tr><td>家庭住址</td><td class="mono">ADDR_HASH</td><td>15,200</td><td>EMR</td></tr>
+                            <tr><td>银行卡/支付</td><td class="mono">PAY_ENCRYPT</td><td>8,640</td><td>财务</td></tr>
+                            <tr><td>病历全文</td><td class="mono">NLP_DESENS</td><td>6,281</td><td>EMR/科研</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div style="flex:1;min-height:0;border-top:1px solid rgba(0,0,0,0.06);margin:16px 28px 0;padding:16px 0 20px;display:flex;flex-direction:column;">
+                <div class="detail-section-title"><i class="fa-solid fa-fire-flame-curved text-red"></i> 全院API越权调用与阻断态势 (24小时)</div>
+                <div id="secChart" style="width:100%;flex:1;"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 3. 临床智能分析 -->
+    <div id="module-bi" class="sys-module-modal hidden">
+        <div class="module-content glass-panel">
+            <div class="panel-header">
+                <h3><i class="fa-solid fa-chart-pie"></i> 临床与运营智能分析 (BI & Analytics)</h3>
+                <button class="close-module-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="mock-dashboard" style="padding-bottom: 0;">
+                <div class="mock-card"><h4>今日全院门急诊量</h4><div class="big-score text-blue">12,408</div><p>较昨日同期 ↑ 4.2%</p></div>
+                <div class="mock-card"><h4>住院患者在床数</h4><div class="big-score text-cyan">2,104</div><p>床位使用率 94.5%</p></div>
+                <div class="mock-card"><h4>手术台次统计</h4><div class="big-score text-green">145 台</div><p>四级手术占比 38%</p></div>
+            </div>
+            <!-- 真实 ECharts 数据容器 -->
+            <div style="flex: 1; min-height: 300px; border-top: 1px solid rgba(255,255,255,0.05); margin-top: 20px; padding-top: 20px;">
+                <h4 style="color: #27ae60; margin-bottom: 15px;"><i class="fa-solid fa-money-bill-trend-up"></i> 核心科室门急诊人次与均次费用对比</h4>
+                <div id="biChart" style="width: 100%; height: calc(100% - 30px);"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- KPI弹窗1: 异构系统接入资产目录 -->
+    <div id="kpi-modal-systems" class="kpi-detail-modal hidden">
+      <div class="kpi-detail-box">
+        <div class="kpi-detail-header">
+          <h2><i class="fa-solid fa-network-wired text-blue"></i> 异构系统接入资产目录 <span class="sub-title">DATA INTEGRATION INVENTORY</span></h2>
+          <button class="close-module-btn kpi-modal-close"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="kpi-detail-body">
+          <div class="detail-kpi-row">
+            <div class="detail-stat-card"><p>已接入系统</p><h3>24</h3><span>系统全部在线</span></div>
+            <div class="detail-stat-card green-accent"><p>今日同步成功</p><h3>21</h3><span>覆盖率 87.5%</span></div>
+            <div class="detail-stat-card orange-accent"><p>超时/告警</p><h3>2</h3><span>PACS / 耗材</span></div>
+            <div class="detail-stat-card red-accent"><p>连接异常</p><h3>1</h3><span>心电系统</span></div>
+          </div>
+          <div>
+            <div class="detail-section-title"><i class="fa-solid fa-table-list"></i> 全院异构系统接入明细台账</div>
+            <table class="detail-pro-table">
+              <thead><tr><th>系统名称</th><th>厂商</th><th>接口协议</th><th>日均同步量</th><th>连接方式</th><th>责任部门</th><th>状态</th></tr></thead>
+              <tbody>
+                <tr><td>HIS 医院信息系统</td><td>东软集团</td><td class="mono">HL7 v2.5 / RESTful</td><td>182,400 条</td><td>直连数据库+API</td><td>信息中心</td><td><span class="status-badge normal"><span class="dot"></span>正常</span></td></tr>
+                <tr><td>LIS 检验信息系统</td><td>迪安诊断</td><td class="mono">HL7 v2.3</td><td>43,200 条</td><td>消息队列 MQ</td><td>检验科</td><td><span class="status-badge normal"><span class="dot"></span>正常</span></td></tr>
+                <tr><td>PACS 影像系统</td><td>GE Healthcare</td><td class="mono">DICOM 3.0 / WADO</td><td>3,500 张</td><td>DICOM Gateway</td><td>影像科</td><td><span class="status-badge warning"><span class="dot"></span>超时</span></td></tr>
+                <tr><td>EMR 电子病历系统</td><td>卫宁健康</td><td class="mono">FHIR R4</td><td>28,900 条</td><td>RESTful API</td><td>医务部</td><td><span class="status-badge normal"><span class="dot"></span>正常</span></td></tr>
+                <tr><td>手麻信息系统</td><td>京颐科技</td><td class="mono">RESTful / Websocket</td><td>8,200 条</td><td>实时推送</td><td>麻醉科</td><td><span class="status-badge normal"><span class="dot"></span>正常</span></td></tr>
+                <tr><td>心电信息系统</td><td>理邦仪器</td><td class="mono">HL7 FHIR</td><td>12,500 条</td><td>API 网关</td><td>心功能科</td><td><span class="status-badge error"><span class="dot"></span>异常</span></td></tr>
+                <tr><td>医保结算系统</td><td>社保局对接</td><td class="mono">SOAP / Webservice</td><td>9,800 条</td><td>专线VPN</td><td>医保办</td><td><span class="status-badge normal"><span class="dot"></span>正常</span></td></tr>
+                <tr><td>耗材管理系统</td><td>HRP平台</td><td class="mono">RESTful JSON</td><td>6,100 条</td><td>定时批量ETL</td><td>总务科</td><td><span class="status-badge warning"><span class="dot"></span>超时</span></td></tr>
+                <tr><td>财务核算系统</td><td>用友软件</td><td class="mono">数据库直连</td><td>15,300 条</td><td>CDC 增量捕获</td><td>财务部</td><td><span class="status-badge normal"><span class="dot"></span>正常</span></td></tr>
+                <tr><td>超声报告系统</td><td>飞利浦</td><td class="mono">DICOM SR</td><td>2,100 条</td><td>DICOM 推送</td><td>超声科</td><td><span class="status-badge normal"><span class="dot"></span>正常</span></td></tr>
+                <tr><td>内镜诊断系统</td><td>奥林巴斯</td><td class="mono">HL7 ORU</td><td>1,800 条</td><td>消息接口</td><td>消化内科</td><td><span class="status-badge normal"><span class="dot"></span>正常</span></td></tr>
+                <tr><td>血透管理系统</td><td>贝朗医疗</td><td class="mono">RESTful</td><td>980 条</td><td>API 对接</td><td>肾内科</td><td><span class="status-badge normal"><span class="dot"></span>正常</span></td></tr>
+                <tr><td>病理信息系统</td><td>赛德康</td><td class="mono">RESTful / HL7</td><td>560 条</td><td>双通道对接</td><td>病理科</td><td><span class="status-badge normal"><span class="dot"></span>正常</span></td></tr>
+                <tr><td>输血管理系统</td><td>博讯生物</td><td class="mono">数据库直连</td><td>430 条</td><td>定时同步</td><td>输血科</td><td><span class="status-badge normal"><span class="dot"></span>正常</span></td></tr>
+                <tr><td>体检管理系统</td><td>慈铭体检</td><td class="mono">RESTful JSON</td><td>3,200 条</td><td>API 网关</td><td>体检中心</td><td><span class="status-badge normal"><span class="dot"></span>正常</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI弹窗2: 数据资产存储盘点 -->
+    <div id="kpi-modal-storage" class="kpi-detail-modal hidden">
+      <div class="kpi-detail-box">
+        <div class="kpi-detail-header">
+          <h2><i class="fa-solid fa-database text-green"></i> 全生命周期数据资产盘点 <span class="sub-title">STORAGE ASSET INVENTORY</span></h2>
+          <button class="close-module-btn kpi-modal-close"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="kpi-detail-body">
+          <div class="detail-kpi-row">
+            <div class="detail-stat-card green-accent"><p>数据总量</p><h3>458 TB</h3><span>较上月增长 +12.4TB</span></div>
+            <div class="detail-stat-card"><p>热数据 (近3月)</p><h3>186 TB</h3><span>占比 40.6%</span></div>
+            <div class="detail-stat-card orange-accent"><p>温数据 (近1年)</p><h3>124 TB</h3><span>占比 27.1%</span></div>
+            <div class="detail-stat-card cyan-accent"><p>冷归档 (1年以上)</p><h3>148 TB</h3><span>占比 32.3%</span></div>
+          </div>
+          <div class="detail-two-col">
+            <div>
+              <div class="detail-section-title"><i class="fa-solid fa-chart-bar"></i> 各业务系统存储占比分布</div>
+              <div class="storage-bar-group">
+                <div class="storage-bar-item"><div class="bar-label"><span>PACS 医学影像库</span><strong>285.0 TB (62.3%)</strong></div><div class="storage-full-bar"><div class="bar-fill" style="width:62.3%;background:#3b82f6"></div></div></div>
+                <div class="storage-bar-item"><div class="bar-label"><span>EMR 结构化病历</span><strong>85.0 TB (18.6%)</strong></div><div class="storage-full-bar"><div class="bar-fill" style="width:18.6%;background:#10b981"></div></div></div>
+                <div class="storage-bar-item"><div class="bar-label"><span>LIS 检验检查数据</span><strong>42.0 TB (9.2%)</strong></div><div class="storage-full-bar"><div class="bar-fill" style="width:9.2%;background:#06b6d4"></div></div></div>
+                <div class="storage-bar-item"><div class="bar-label"><span>HIS 运营流水数据</span><strong>28.5 TB (6.2%)</strong></div><div class="storage-full-bar"><div class="bar-fill" style="width:6.2%;background:#f59e0b"></div></div></div>
+                <div class="storage-bar-item"><div class="bar-label"><span>手麻 / 心电 / 其他</span><strong>17.5 TB (3.7%)</strong></div><div class="storage-full-bar"><div class="bar-fill" style="width:3.7%;background:#8b5cf6"></div></div></div>
+              </div>
+            </div>
+            <div>
+              <div class="detail-section-title"><i class="fa-solid fa-server"></i> 存储集群节点状态</div>
+              <table class="detail-pro-table">
+                <thead><tr><th>节点</th><th>用量</th><th>容量</th><th>I/O</th><th>状态</th></tr></thead>
+                <tbody>
+                  <tr><td class="mono">DataNode-01</td><td>48.2 TB</td><td>60 TB</td><td>1.2 GB/s</td><td><span class="status-badge normal"><span class="dot"></span>健康</span></td></tr>
+                  <tr><td class="mono">DataNode-02</td><td>51.6 TB</td><td>60 TB</td><td>980 MB/s</td><td><span class="status-badge normal"><span class="dot"></span>健康</span></td></tr>
+                  <tr><td class="mono">DataNode-03</td><td>47.9 TB</td><td>60 TB</td><td>1.1 GB/s</td><td><span class="status-badge normal"><span class="dot"></span>健康</span></td></tr>
+                  <tr><td class="mono">DataNode-04</td><td>55.8 TB</td><td>60 TB</td><td>760 MB/s</td><td><span class="status-badge warning"><span class="dot"></span>容量预警</span></td></tr>
+                  <tr><td class="mono">DataNode-05</td><td>44.1 TB</td><td>60 TB</td><td>1.3 GB/s</td><td><span class="status-badge normal"><span class="dot"></span>健康</span></td></tr>
+                  <tr><td class="mono">Archive-01</td><td>148.0 TB</td><td>200 TB</td><td>120 MB/s</td><td><span class="status-badge info"><span class="dot"></span>归档</span></td></tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+          <div>
+            <div class="detail-section-title"><i class="fa-solid fa-calendar-days"></i> 近30日数据增长明细 (GB)</div>
+            <table class="detail-pro-table">
+              <thead><tr><th>日期</th><th>PACS新增</th><th>EMR新增</th><th>LIS新增</th><th>HIS新增</th><th>合计</th><th>累计总量</th></tr></thead>
+              <tbody>
+                <tr><td>2025-05-05</td><td>+14.2 GB</td><td>+2.8 GB</td><td>+1.4 GB</td><td>+0.9 GB</td><td>+19.3 GB</td><td>458.0 TB</td></tr>
+                <tr><td>2025-05-04</td><td>+13.8 GB</td><td>+3.1 GB</td><td>+1.2 GB</td><td>+1.0 GB</td><td>+19.1 GB</td><td>457.9 TB</td></tr>
+                <tr><td>2025-05-03</td><td>+12.1 GB</td><td>+2.5 GB</td><td>+1.1 GB</td><td>+0.8 GB</td><td>+16.5 GB</td><td>457.8 TB</td></tr>
+                <tr><td>2025-05-02</td><td>+11.5 GB</td><td>+2.2 GB</td><td>+0.9 GB</td><td>+0.7 GB</td><td>+15.3 GB</td><td>457.8 TB</td></tr>
+                <tr><td>2025-05-01</td><td>+8.3 GB</td><td>+1.8 GB</td><td>+0.7 GB</td><td>+0.5 GB</td><td>+11.3 GB</td><td>457.8 TB</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI弹窗3: 数据总线实时监控 -->
+    <div id="kpi-modal-latency" class="kpi-detail-modal hidden">
+      <div class="kpi-detail-box">
+        <div class="kpi-detail-header">
+          <h2><i class="fa-solid fa-bolt text-cyan"></i> 数据总线 (ESB/MQ) 实时监控 <span class="sub-title">REALTIME BUS MONITOR</span></h2>
+          <button class="close-module-btn kpi-modal-close"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="kpi-detail-body">
+          <div class="detail-kpi-row">
+            <div class="detail-stat-card cyan-accent"><p>平均接入延迟</p><h3 id="modal-latency-val">2.1s</h3><span>目标阈值 ≤5s</span></div>
+            <div class="detail-stat-card green-accent"><p>当前活跃通道</p><h3>18</h3><span>Kafka + RabbitMQ</span></div>
+            <div class="detail-stat-card"><p>今日总消息量</p><h3>4.2M</h3><span>420 万条事务</span></div>
+            <div class="detail-stat-card orange-accent"><p>当前队列积压</p><h3>1,248</h3><span>PACS 通道堆积</span></div>
+          </div>
+          <div>
+            <div class="detail-section-title"><i class="fa-solid fa-stream"></i> 活跃消息队列通道实时状态</div>
+            <div class="channel-grid">
+              <div class="channel-card"><div class="ch-name">Kafka: Topic_HIS_Outpatient_Fee</div><div class="ch-tps">1,248</div><div class="ch-meta"><span>TPS (条/秒)</span><span class="ch-latency ok">延迟 1.2s ✓</span></div></div>
+              <div class="channel-card"><div class="ch-name">Kafka: Topic_EMR_Inpatient_Record</div><div class="ch-tps">382</div><div class="ch-meta"><span>TPS (条/秒)</span><span class="ch-latency ok">延迟 2.1s ✓</span></div></div>
+              <div class="channel-card"><div class="ch-name">Kafka: Topic_LIS_Result_Detail</div><div class="ch-tps">815</div><div class="ch-meta"><span>TPS (条/秒)</span><span class="ch-latency ok">延迟 1.8s ✓</span></div></div>
+              <div class="channel-card"><div class="ch-name">Kafka: Topic_PACS_Image_Index</div><div class="ch-tps">47</div><div class="ch-meta"><span>TPS (条/秒)</span><span class="ch-latency warn">延迟 4.8s ⚠</span></div></div>
+              <div class="channel-card"><div class="ch-name">RabbitMQ: Queue_Insurance_Settle</div><div class="ch-tps">290</div><div class="ch-meta"><span>TPS (条/秒)</span><span class="ch-latency ok">延迟 2.3s ✓</span></div></div>
+              <div class="channel-card"><div class="ch-name">RabbitMQ: Queue_Supply_Consume</div><div class="ch-tps">124</div><div class="ch-meta"><span>TPS (条/秒)</span><span class="ch-latency warn">延迟 3.9s ⚠</span></div></div>
+              <div class="channel-card"><div class="ch-name">Kafka: Topic_Finance_DayEnd</div><div class="ch-tps">62</div><div class="ch-meta"><span>TPS (条/秒)</span><span class="ch-latency ok">延迟 1.5s ✓</span></div></div>
+              <div class="channel-card"><div class="ch-name">Kafka: Topic_NurseStation_Vital</div><div class="ch-tps">2,140</div><div class="ch-meta"><span>TPS (条/秒)</span><span class="ch-latency ok">延迟 0.8s ✓</span></div></div>
+            </div>
+          </div>
+          <div>
+            <div class="detail-section-title"><i class="fa-solid fa-clock-rotate-left"></i> ETL 批处理任务执行记录</div>
+            <table class="detail-pro-table">
+              <thead><tr><th>任务名称</th><th>触发时间</th><th>耗时</th><th>处理记录数</th><th>成功率</th><th>状态</th></tr></thead>
+              <tbody>
+                <tr><td>HIS_Daily_Snapshot</td><td>00:05:00</td><td>12m 34s</td><td>182,400</td><td>100%</td><td><span class="status-badge normal"><span class="dot"></span>完成</span></td></tr>
+                <tr><td>LIS_Result_Aggregate</td><td>01:00:00</td><td>8m 12s</td><td>43,200</td><td>99.8%</td><td><span class="status-badge normal"><span class="dot"></span>完成</span></td></tr>
+                <tr><td>PACS_Index_Rebuild</td><td>02:30:00</td><td>45m 02s</td><td>3,520</td><td>97.2%</td><td><span class="status-badge warning"><span class="dot"></span>部分失败</span></td></tr>
+                <tr><td>Finance_Reconcile</td><td>23:00:00</td><td>5m 48s</td><td>15,300</td><td>100%</td><td><span class="status-badge normal"><span class="dot"></span>完成</span></td></tr>
+                <tr><td>Insurance_DayClose</td><td>23:30:00</td><td>18m 20s</td><td>9,800</td><td>100%</td><td><span class="status-badge normal"><span class="dot"></span>完成</span></td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- KPI弹窗4: 安全防御墙拦截审计 -->
+    <div id="kpi-modal-security" class="kpi-detail-modal hidden">
+      <div class="kpi-detail-box">
+        <div class="kpi-detail-header">
+          <h2><i class="fa-solid fa-shield-halved text-orange"></i> 数据安全防御墙拦截审计 <span class="sub-title">SECURITY AUDIT WALL</span></h2>
+          <button class="close-module-btn kpi-modal-close"><i class="fa-solid fa-xmark"></i></button>
+        </div>
+        <div class="kpi-detail-body">
+          <div class="detail-kpi-row">
+            <div class="detail-stat-card orange-accent"><p>累计拦截次数</p><h3>84,291</h3><span>自系统上线以来</span></div>
+            <div class="detail-stat-card red-accent"><p>今日高危阻断</p><h3>12</h3><span>已全部熔断处置</span></div>
+            <div class="detail-stat-card"><p>数据脱敏成功率</p><h3>99.97%</h3><span>共脱敏 1,240 万字段</span></div>
+            <div class="detail-stat-card green-accent"><p>合规审计通过率</p><h3>98.4%</h3><span>符合等保三级要求</span></div>
+          </div>
+          <div>
+            <div class="detail-section-title"><i class="fa-solid fa-triangle-exclamation text-red"></i> 今日高危拦截事件明细</div>
+            <table class="detail-pro-table">
+              <thead><tr><th>时间</th><th>发起 IP/终端</th><th>目标接口</th><th>风险类型</th><th>数据敏感级别</th><th>系统动作</th></tr></thead>
+              <tbody>
+                <tr><td class="mono">09:12:33</td><td>192.168.12.45 (科研平台)</td><td>/api/patient/detail</td><td class="text-red">越权明文手机号</td><td><span class="status-badge error"><span class="dot"></span>S1极敏感</span></td><td>熔断IP + 通报</td></tr>
+                <tr><td class="mono">10:34:07</td><td>10.1.5.88 (影像终端)</td><td>/api/emr/fulltext</td><td class="text-red">SQL注入探测</td><td><span class="status-badge error"><span class="dot"></span>S1极敏感</span></td><td>过滤 + 记录</td></tr>
+                <tr><td class="mono">11:02:19</td><td>10.2.1.33 (手麻系统)</td><td>/api/inpatient/batch</td><td class="text-orange">跨区域批量拉取</td><td><span class="status-badge warning"><span class="dot"></span>S2敏感</span></td><td>限速 + 告警</td></tr>
+                <tr><td class="mono">11:45:52</td><td>172.16.8.101 (科室PC)</td><td>/api/patient/idcard</td><td class="text-red">未授权身份证查询</td><td><span class="status-badge error"><span class="dot"></span>S1极敏感</span></td><td>阻断 + 脱敏返回</td></tr>
+                <tr><td class="mono">14:18:06</td><td>192.168.30.5 (外包维护)</td><td>/api/finance/detail</td><td class="text-orange">无授权财务查询</td><td><span class="status-badge warning"><span class="dot"></span>S2敏感</span></td><td>阻断 + 审计记录</td></tr>
+                <tr><td class="mono">15:33:41</td><td>10.0.0.254 (管理后台)</td><td>/api/user/export</td><td class="text-red">大批量用户导出</td><td><span class="status-badge error"><span class="dot"></span>S1极敏感</span></td><td>阻断 + 安全告警</td></tr>
+              </tbody>
+            </table>
+          </div>
+          <div>
+            <div class="detail-section-title"><i class="fa-solid fa-masks-theater"></i> 数据脱敏规则执行统计</div>
+            <table class="detail-pro-table">
+              <thead><tr><th>脱敏字段类型</th><th>规则名称</th><th>今日执行次数</th><th>覆盖系统</th><th>脱敏方式</th></tr></thead>
+              <tbody>
+                <tr><td>患者手机号码</td><td>PHONE_MASK_RULE</td><td>48,320</td><td>HIS / EMR / LIS</td><td>保留首3末4，中间*替代</td></tr>
+                <tr><td>居民身份证号</td><td>IDCARD_MASK_RULE</td><td>21,850</td><td>HIS / 医保</td><td>保留6位出生年月，余位*</td></tr>
+                <tr><td>患者家庭住址</td><td>ADDRESS_HASH_RULE</td><td>15,200</td><td>EMR</td><td>精确到区/县级，去除街道</td></tr>
+                <tr><td>银行卡/支付信息</td><td>PAYMENT_ENCRYPT</td><td>8,640</td><td>财务系统</td><td>AES-256 对称加密</td></tr>
+                <tr><td>诊断病历全文</td><td>NLP_DESENS_RULE</td><td>6,281</td><td>EMR / 科研平台</td><td>NLP实体识别后替换</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 全局日志详情模态框 -->
+    <div id="logDetailModal" class="log-modal hidden">
+        <div class="log-modal-content glass-panel">
+            <div class="panel-header">
+                <h3 id="modalLogTitle"><i class="fa-solid fa-file-shield"></i> 日志追溯分析</h3>
+                <button id="closeLogModalBtn" class="close-btn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body" id="modalLogBody">
+                <!-- 动态填充 -->
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
